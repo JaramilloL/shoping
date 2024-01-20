@@ -4,6 +4,9 @@ import PropTypes from 'prop-types'
 import { UserContext } from './UserContext'
 import { useReducer } from 'react'
 import UserReducer from './UserReducer'
+import { auth } from '../firebase/firebase'
+
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 
 const UserState = ( { children } ) => { //creamos el contexto para el paso de parametrso en la app
     const initialState = {
@@ -11,12 +14,17 @@ const UserState = ( { children } ) => { //creamos el contexto para el paso de pa
         user: null,
     }
 
+    //?Creamos las funciones para el inicio de sesion con email y password
+    const registerUser = (email, password) =>
+         createUserWithEmailAndPassword(auth, email, password)
+
     const [state, dispatch] = useReducer(UserReducer, initialState)
-    
+
   return (
     <UserContext.Provider value={{
         state,
-        dispatch
+        dispatch,
+        registerUser
     }}>
         { children }
     </UserContext.Provider>

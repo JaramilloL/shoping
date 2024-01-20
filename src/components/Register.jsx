@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { UserContext } from "../context/UserContext";
 
 const Register = () => {
   const {
@@ -8,10 +10,20 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit(async(data) => { //creamos una peticion asincrona 
     console.log(data);
+    try {
+      await registerUser(data.email, data.password)
+    } catch (error) {
+      console.log(error);
+    }
     reset();
   });
+
+  //usamos el contexto de el estado para usar la creacion del usuario 
+  const { registerUser } = useContext(UserContext)
+
+
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -68,7 +80,7 @@ const Register = () => {
 
           <label htmlFor="floatingPassword">Password</label>
         </div>
-        <input type="submit" className="btn btn-primary"/>
+        <input type="submit" className="btn btn-primary" />
       </form>
     </>
   );
